@@ -1,6 +1,7 @@
 # Argo CD Application Updater
 
 NodeJS command line application that checks all Argo CD application manifest in the directory it's being run in for an update of the target revision.
+It then updates the application manifest, writes it back to git and creates a merge request.
 
 ## Supported application types
 - Helm
