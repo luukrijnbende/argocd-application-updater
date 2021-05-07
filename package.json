@@ -1,0 +1,31 @@
+{
+  "name": "argocd-application-updater",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "bin": {
+    "aapu": "dist/index.js"
+  },
+  "scripts": {
+    "start": "npm run build && node .",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:td092854/tools/argocd-application-updater.git"
+  },
+  "author": "Luuk Rijnbende",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "colorette": "^1.2.2",
+    "semver": "^7.3.5",
+    "yaml": "^1.10.2"
+  },
+  "devDependencies": {
+    "@types/node": "^15.0.2",
+    "@types/semver": "^7.3.5",
+    "typescript": "^4.2.4"
+  }
+}
