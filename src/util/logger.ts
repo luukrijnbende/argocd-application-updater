@@ -11,6 +11,12 @@ enum LogLevel {
 export class Logger {
     private static logLevel = LogLevel.Info;
     
+    /**
+     * Log a message to the console.
+     * @param {LogLevel} level - The level to log. 
+     * @param {string} tag - The tag to add to the log message.
+     * @param {any} message - The message to log.
+     */
     private static log(level: LogLevel, tag: string, message: any): void {
         if (level < Logger.logLevel) {
             return;
@@ -22,6 +28,7 @@ export class Logger {
             tag: colorette.green(`[${tag}]`),
         }
 
+        // Color the log levels.
         switch (level) {
             case LogLevel.Trace:
             case LogLevel.Debug:
@@ -38,18 +45,38 @@ export class Logger {
         console.log(`${parts.level}${parts.tag} - ${parts.message}`);
     }
 
+    /**
+     * Log a debug message.
+     * @param {string} tag - The tag to add to the log message. 
+     * @param {any} message - The mssage to log.
+     */
     public static debug(tag: string, message: any): void {
         Logger.log(LogLevel.Debug, tag, message);
     }
 
+    /**
+     * Log an info message.
+     * @param {string} tag - The tag to add to the log message. 
+     * @param {any} message - The mssage to log.
+     */
     public static info(tag: string, message: any): void {
         Logger.log(LogLevel.Info, tag, message);
     }
 
+    /**
+     * Log a warning message.
+     * @param {string} tag - The tag to add to the log message. 
+     * @param {any} message - The mssage to log.
+     */
     public static warning(tag: string, message: any): void {
         Logger.log(LogLevel.Warning, tag, message);
     }
 
+    /**
+     * Log an error message.
+     * @param {string} tag - The tag to add to the log message. 
+     * @param {any} message - The mssage to log.
+     */
     public static error(tag: string, message: any): void {
         Logger.log(LogLevel.Error, tag, message);
     }

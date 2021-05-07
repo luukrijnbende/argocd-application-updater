@@ -4,12 +4,11 @@
   "description": "",
   "main": "dist/index.js",
   "bin": {
-    "aapu": "dist/index.js"
+    "argocd-image-updater": "dist/index.js"
   },
   "scripts": {
     "start": "npm run build && node .",
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

@@ -4,7 +4,8 @@ import axios from "axios";
 import yaml from "yaml";
 import semver from "semver";
 
-import { Logger } from "./logger";
+import { Logger } from "../util/logger";
+import { Git } from "../util/git";
 
 export enum ArgoCDApplicationType {
     Git = "git",
@@ -20,6 +21,8 @@ export class ArgoCDApplication {
     public readonly repository: string;
     public readonly path: string;
     public version: string;
+    
+    private manifest: any;
 
     /**
      * Read the provided file and turn it into an Argo CD application.
@@ -39,7 +42,8 @@ export class ArgoCDApplication {
         }
 
         if (documents.length > 1) {
-            Logger.debug(file, `Multiple documents found, using first.`);
+            Logger.debug(file, `Multiple documents found, skipping.`);
+            return null;
         }
 
         const document = documents[0];
@@ -87,6 +91,8 @@ export class ArgoCDApplication {
      */
     public constructor(file: string, manifest: any) {
         this.file = file;
+        this.manifest = manifest;
+
         this.name = manifest.metadata.name;
         this.type = ArgoCDApplication.getTypeFromSpec(manifest.spec);
         this.repository = manifest.spec.source.repoURL;
@@ -97,7 +103,7 @@ export class ArgoCDApplication {
     /**
      * Update this application to the latest version.
      */
-    public async update(): Promise<void> {
+    public async update(): Promise<boolean> {
         let latestVersion;
 
         Logger.info(this.file, "Checking for updates..");
@@ -105,14 +111,29 @@ export class ArgoCDApplication {
         switch (this.type) {
             case ArgoCDApplicationType.Helm:
                 latestVersion = await this.checkForHelmUpdate();
+                break;
         }
 
         if (!latestVersion) {
             Logger.info(this.file, "Application is already on the latest version.");
-            return;
+            return false;
         }
 
-        Logger.info(this.file, `Found new version '${latestVersion}'`);
+        Logger.info(this.file, `Found new version '${latestVersion}', updating..`);
+        const branch = `chore/update-${this.name}-${latestVersion}`;
+
+        if (await Git.branchExists(branch)) {
+            Logger.info(this.file, "The new version is already pending, please merge the pull request.");
+            return false;
+        }
+
+        await Git.createAndCheckoutBranch(branch);
+        await this.writeVersion(latestVersion);
+        await Git.addAll();
+        await Git.commit(`chore: bump ${this.name} version to ${this.version}`);
+        await Git.pushAndCreateMergeRequest(branch);
+
+        return true;
     }
 
     /**
@@ -141,5 +162,13 @@ export class ArgoCDApplication {
         }
 
         return null;
+    }
+
+    private async writeVersion(version: string): Promise<void> {
+        this.version = version;
+        this.manifest.spec.source.targetRevision = version;
+        
+        const data = yaml.stringify(this.manifest, { indentSeq: false });
+        await fs.writeFile(this.file, data, "utf-8");
     }
 }
