@@ -1,3 +1,7 @@
+stages:
+  - build
+  - release
+
 build:
   stage: build
   image: node:14-alpine
