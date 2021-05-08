@@ -29,7 +29,7 @@ release:
   variables:
     GIT_STRATEGY: none
   script:
-  - docker login -u gitlab-ci-token p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+  - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
   - docker build -t td092854/tools/argocd-application-updater:latest .
   - docker push td092854/tools/argocd-application-updater:latest
   rules:
