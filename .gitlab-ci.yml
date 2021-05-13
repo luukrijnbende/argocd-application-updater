@@ -2,6 +2,9 @@ stages:
   - build
   - release
 
+before_script:
+- export APP_VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
+
 build:
   stage: build
   image: node:14-alpine
@@ -28,11 +31,14 @@ release:
   - docker:20.10-dind
   variables:
     GIT_STRATEGY: none
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:latest
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$APP_VERSION
+    IMAGE_TAG_LATEST: $CI_REGISTRY_IMAGE:latest
   script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   - docker build -t $IMAGE_TAG .
+  - docker tag $IMAGE_TAG $IMAGE_TAG_LATEST
   - docker push $IMAGE_TAG
+  - docker push $IMAGE_TAG_LATEST
   rules:
   - if: '$CI_COMMIT_REF_NAME == "main"'
     when: always
