@@ -12,5 +12,8 @@ COPY package*.json ./
 RUN npm link
 # Use a non-root user, in this case node.
 USER node
-# Create a directory for SSH as the node user.
+# Create a directory for SSH and updating as the node user.
 RUN mkdir .ssh
+RUN mkdir git
+# Change to the git directory.
+WORKDIR  /home/node/git
