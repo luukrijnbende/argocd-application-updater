@@ -1,9 +1,7 @@
 # Use the Alpine image as base.
 FROM node:14-alpine
-# Install and setup Git.
+# Install Git.
 RUN apk --no-cache add git
-RUN git config --global user.email "argocd-application-updater@td092854.net"
-RUN git config --global user.name "Argo CD Application Updater"
 # Change the working directory.
 WORKDIR /home/node
 # Bundle the application.
