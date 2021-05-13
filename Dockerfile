@@ -4,8 +4,6 @@ FROM node:14-alpine
 RUN apk --no-cache add git openssh-client
 # Change the working directory.
 WORKDIR /home/node
-# Create a directory for ssh.
-RUN mkdir .ssh
 # Bundle the application.
 COPY node_modules ./node_modules
 COPY dist ./dist
@@ -14,3 +12,5 @@ COPY package*.json ./
 RUN npm link
 # Use a non-root user, in this case node.
 USER node
+# Create a directory for SSH as the node user.
+RUN mkdir .ssh
