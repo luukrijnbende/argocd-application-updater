@@ -1,7 +1,7 @@
 # Use the Alpine image as base.
 FROM node:14-alpine
-# Install Git.
-RUN apk --no-cache add git
+# Install Git and SSH.
+RUN apk --no-cache add git openssh-client
 # Change the working directory.
 WORKDIR /home/node
 # Bundle the application.
