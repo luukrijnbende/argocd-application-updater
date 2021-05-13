@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { ArgoCDApplication } from "./applications/argocd.application";
+import { ArgoCDApplication } from "./argocd-application";
 import { FileReader } from "./util/file-reader";
 import { Logger } from "./util/logger";
 

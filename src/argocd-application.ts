@@ -4,8 +4,8 @@ import axios from "axios";
 import yaml from "yaml";
 import semver from "semver";
 
-import { Logger } from "../util/logger";
-import { Git } from "../util/git";
+import { Logger } from "./util/logger";
+import { Git } from "./util/git";
 
 export enum ArgoCDApplicationType {
     Git = "git",
@@ -104,36 +104,41 @@ export class ArgoCDApplication {
      * Update this application to the latest version.
      */
     public async update(): Promise<boolean> {
-        let latestVersion;
+        try {
+            let latestVersion;
 
-        Logger.info(this.file, "Checking for updates..");
+            Logger.info(this.file, "Checking for updates..");
 
-        switch (this.type) {
-            case ArgoCDApplicationType.Helm:
-                latestVersion = await this.checkForHelmUpdate();
-                break;
-        }
+            switch (this.type) {
+                case ArgoCDApplicationType.Helm:
+                    latestVersion = await this.checkForHelmUpdate();
+                    break;
+            }
 
-        if (!latestVersion) {
-            Logger.info(this.file, "Application is already on the latest version.");
+            if (!latestVersion) {
+                Logger.info(this.file, "Application is already on the latest version.");
+                return false;
+            }
+
+            Logger.info(this.file, `Found new version '${latestVersion}', updating..`);
+            const branch = `chore/update-${this.name}-${latestVersion}`;
+
+            if (await Git.branchExists(branch)) {
+                Logger.info(this.file, "The new version is already pending, please merge the pull request.");
+                return false;
+            }
+
+            await Git.createAndCheckoutBranch(branch);
+            await this.writeVersion(latestVersion);
+            await Git.addAll();
+            await Git.commit(`chore: bump ${this.name} version to ${this.version}`);
+            await Git.pushAndCreatePullRequest(branch);
+
+            return true;
+        } catch (err) {
+            Logger.error(this.file, err);
             return false;
         }
-
-        Logger.info(this.file, `Found new version '${latestVersion}', updating..`);
-        const branch = `chore/update-${this.name}-${latestVersion}`;
-
-        if (await Git.branchExists(branch)) {
-            Logger.info(this.file, "The new version is already pending, please merge the pull request.");
-            return false;
-        }
-
-        await Git.createAndCheckoutBranch(branch);
-        await this.writeVersion(latestVersion);
-        await Git.addAll();
-        await Git.commit(`chore: bump ${this.name} version to ${this.version}`);
-        await Git.pushAndCreateMergeRequest(branch);
-
-        return true;
     }
 
     /**

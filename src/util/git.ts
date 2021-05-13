@@ -41,11 +41,11 @@ export class Git {
     }
 
     /**
-     * Push the commit to the remote and create a merge request.
+     * Push the commit to the remote and create a pull request.
      * WARNING: Only works for GitLab!
      * @param {string} branch - The name of the branch to push. 
      */
-    public static async pushAndCreateMergeRequest(branch: string): Promise<void> {
+    public static async pushAndCreatePullRequest(branch: string): Promise<void> {
         await Git.execute(`push --set-upstream origin ${branch} -o merge_request.create`);
     }
 
