@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "bin": {
-    "argocd-image-updater": "dist/index.js"
+    "argocd-application-updater": "dist/index.js"
   },
   "scripts": {
     "start": "npm run build && node .",
