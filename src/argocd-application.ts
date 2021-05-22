@@ -133,6 +133,7 @@ export class ArgoCDApplication {
             await Git.addAll();
             await Git.commit(`chore: bump ${this.name} version to ${this.version}`);
             await Git.pushAndCreatePullRequest(branch);
+            await Git.checkoutPreviousBranch();
 
             return true;
         } catch (err) {

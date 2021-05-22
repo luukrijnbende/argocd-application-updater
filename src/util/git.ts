@@ -25,6 +25,13 @@ export class Git {
         await Git.execute(`checkout -b ${branch}`);
     }
 
+     /**
+     * Check out the previous branch.
+     */
+    public static async checkoutPreviousBranch(): Promise<void> {
+        await Git.execute(`checkout -`);
+    }
+
     /**
      * Add all changed files for a commit.
      */
