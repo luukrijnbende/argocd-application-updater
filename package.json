@@ -1,7 +1,7 @@
 {
   "name": "argocd-application-updater",
   "version": "1.0.1",
-  "description": "",
+  "description": "NodeJS command line application that checks all Argo CD application manifests in the directory it's being run in for an update of the target revision. It then updates the application manifest, writes it back to git and creates a pull request.",
   "main": "dist/index.js",
   "bin": {
     "argocd-application-updater": "dist/index.js"
@@ -15,7 +15,7 @@
     "url": "git@gitlab.com:td092854/tools/argocd-application-updater.git"
   },
   "author": "Luuk Rijnbende",
-  "license": "UNLICENSED",
+  "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
     "colorette": "^1.2.2",

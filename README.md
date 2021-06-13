@@ -10,13 +10,14 @@ It then updates the application manifest, writes it back to git and creates a pu
 - `npm install`
 - `npm run build`
 - `npm link`
-- `cd` to the repository that contains the Argo CD application files
+- `cd` to the repository that contains the Argo CD application manifests
 - `argocd-application-updater`
 
 ## Running on GitLab CI
+These steps have to be executed in the repo that contains the Argo CD application manifests.
 - Create a deploy key with write access (https://docs.gitlab.com/ee/user/project/deploy_keys)
 - Add the private part as a CI variable under the name `SSH_PRIVATE_KEY`
-- Add the example below to `.gitlab-ci.yml`
+- Add the example below to `.gitlab-ci.yml` and fill in the blanks
 
 ### Example pipeline
 ```yaml
@@ -25,7 +26,7 @@ stages:
 
 update:
   stage: update
-  image: registry.gitlab.com/td092854/tools/argocd-application-updater:<version or latest>
+  image: <docker_image_created_from_argocd_application_updater>
   variables:
     # Disable auto clone.
     GIT_STRATEGY: none
@@ -35,7 +36,7 @@ update:
   - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
     # Setup an identity.
-  - git config --global user.email "argocd-application-updater@td092854.net"
+  - git config --global user.email "<email_address>"
   - git config --global user.name "Argo CD Application Updater"
   script:
     # Clone the repository using SSH and cd into it.
@@ -53,3 +54,8 @@ update:
     # Otherwise, never trigger the pipeline.
   - when: never
 ```
+
+## TODO
+- Add support for updating Kustomize
+- Add as package to NPM registry
+- Publish a docker image that can be used in CI
