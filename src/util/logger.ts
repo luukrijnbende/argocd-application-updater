@@ -11,41 +11,11 @@ enum LogLevel {
 export class Logger {
     private static logLevel = LogLevel.Info;
     
-    /**
-     * Log a debug message.
-     * @param {string} tag - The tag to add to the log message. 
-     * @param {any} message - The mssage to log.
-     */
-    public static debug(tag: string, message: any): void {
-        Logger.log(LogLevel.Debug, tag, message);
-    }
-
-    /**
-     * Log an info message.
-     * @param {string} tag - The tag to add to the log message. 
-     * @param {any} message - The mssage to log.
-     */
-    public static info(tag: string, message: any): void {
-        Logger.log(LogLevel.Info, tag, message);
-    }
-
-    /**
-     * Log a warning message.
-     * @param {string} tag - The tag to add to the log message. 
-     * @param {any} message - The mssage to log.
-     */
-    public static warning(tag: string, message: any): void {
-        Logger.log(LogLevel.Warning, tag, message);
-    }
-
-    /**
-     * Log an error message.
-     * @param {string} tag - The tag to add to the log message. 
-     * @param {any} message - The mssage to log.
-     */
-    public static error(tag: string, message: any): void {
-        Logger.log(LogLevel.Error, tag, message);
-    }
+    public static trace(tag: string, message: any): void { Logger.log(LogLevel.Trace, tag, message); }
+    public static debug(tag: string, message: any): void { Logger.log(LogLevel.Debug, tag, message); }
+    public static info(tag: string, message: any): void { Logger.log(LogLevel.Info, tag, message); }
+    public static warning(tag: string, message: any): void { Logger.log(LogLevel.Warning, tag, message); }
+    public static error(tag: string, message: any): void { Logger.log(LogLevel.Error, tag, message); }
 
     /**
      * Log a message to the console.
@@ -87,11 +57,6 @@ export class Logger {
      * @returns {string} - The formatted timestamp.
      */
     private static getTimestamp(): string {
-        const date = new Date();
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-        const seconds = date.getSeconds().toString().padStart(2, "0");
-
-        return `${hours}:${minutes}:${seconds}`
+        return new Date().toLocaleTimeString(undefined, { hour12: false });
     }
 }

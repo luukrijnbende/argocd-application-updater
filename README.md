@@ -56,6 +56,8 @@ update:
 ```
 
 ## TODO
+- Add support for PRs on Github
 - Add support for updating Kustomize
 - Add as package to NPM registry
 - Publish a docker image that can be used in CI
+- Add typing for application manifest
