@@ -102,8 +102,9 @@ export class ArgoCDApplication {
 
     /**
      * Update this application to the latest version.
+     * @param {string[]} pushOptions - Options to pass to the Git push command
      */
-    public async update(): Promise<boolean> {
+    public async update(pushOptions: string[]): Promise<boolean> {
         try {
             let latestVersion;
 
@@ -124,7 +125,7 @@ export class ArgoCDApplication {
             const branch = `chore/update-${this.name}-${latestVersion}`;
 
             if (await Git.branchExists(branch)) {
-                Logger.info(this.file, "The new version is already pending, please merge the pull request.");
+                Logger.info(this.file, "The new version is already pending, please merge it.");
                 return false;
             }
 
@@ -132,7 +133,7 @@ export class ArgoCDApplication {
             await this.writeVersion(latestVersion);
             await Git.addAll();
             await Git.commit(`chore: bump ${this.name} version to ${this.version}`);
-            await Git.pushAndCreatePullRequest(branch);
+            await Git.push(branch, pushOptions);
             await Git.checkoutPreviousBranch();
 
             return true;

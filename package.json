@@ -1,6 +1,6 @@
 {
   "name": "argocd-application-updater",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "NodeJS command line application that checks all Argo CD application manifests in the directory it's being run in for an update of the target revision. It then updates the application manifest, writes it back to git and creates a pull request.",
   "main": "dist/index.js",
   "bin": {
@@ -19,12 +19,13 @@
   "dependencies": {
     "axios": "^0.21.1",
     "colorette": "^1.2.2",
+    "commander": "^8.0.0",
     "semver": "^7.3.5",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
-    "@types/node": "^15.0.2",
-    "@types/semver": "^7.3.5",
-    "typescript": "^4.2.4"
+    "@types/node": "^15.12.5",
+    "@types/semver": "^7.3.6",
+    "typescript": "^4.3.4"
   }
 }

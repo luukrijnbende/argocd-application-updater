@@ -48,12 +48,15 @@ export class Git {
     }
 
     /**
-     * Push the commit to the remote and create a pull request.
-     * WARNING: Only works for GitLab!
-     * @param {string} branch - The name of the branch to push. 
+     * Push the commit to the remote with optional extra options.
+     * @param {string} branch - The name of the branch to push.
+     * @param {string[]} options - Extra options to pass to the push command.
      */
-    public static async pushAndCreatePullRequest(branch: string): Promise<void> {
-        await Git.execute(`push --set-upstream origin ${branch} -o merge_request.create`);
+     public static async push(branch: string, options: string[] = []): Promise<void> {
+        let command = `push --set-upstream origin ${branch}`;
+        options.forEach(option => command += ` -o ${Git.escapePushOption(option)}`);
+
+        await Git.execute(command);
     }
 
     /**
@@ -71,5 +74,15 @@ export class Git {
                 return resolve(stdout || stderr);
             });
         });
+    }
+
+    private static escapePushOption(option: string): string {
+        const [key, value] = option.split("=");
+
+        if (value && value.includes(" ")) {
+            return `${key}="${value}"`;
+        }
+
+        return option;
     }
 }
