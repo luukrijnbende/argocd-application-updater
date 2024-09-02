@@ -1,5 +1,8 @@
 # Argo CD Application Updater
 
+> [!WARNING]
+> I am using Renovate now and this project is no longer in use / supported
+
 NodeJS command line application that checks all Argo CD application manifests in the directory it's being run in for an update of the target revision.
 It then updates the application manifest and writes it back to git.
 A pull request can be created by passing push options for GitLab or using Actions for GitHub.
